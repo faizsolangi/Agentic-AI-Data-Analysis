@@ -163,11 +163,12 @@ def build_pipeline(df: pd.DataFrame, target_col: str):
         ('imputer', SimpleImputer(strategy='median')),
         ('scaler', StandardScaler())
     ])
+
     categorical_transformer = None
     if categorical_cols:
         categorical_transformer = Pipeline(steps=[
             ('imputer', SimpleImputer(strategy='most_frequent')),
-            ('onehot', OneHotEncoder(handle_unknown='ignore', sparse=False))
+            ('onehot', OneHotEncoder(handle_unknown='ignore', sparse_output=False))
         ])
 
     transformers = []
@@ -178,6 +179,7 @@ def build_pipeline(df: pd.DataFrame, target_col: str):
 
     preprocessor = ColumnTransformer(transformers=transformers, remainder='drop')
     return preprocessor, numeric_cols, categorical_cols
+
 
 def get_estimator(name: str, task_type: str):
     name = name.lower()
@@ -428,3 +430,4 @@ Explain in 3 short bullet points why that model is appropriate for this dataset,
                 st.error(f"OpenAI failed for explanation: {e}")
         else:
             st.info("Set OPENAI_API_KEY in environment to enable explanation.")
+
